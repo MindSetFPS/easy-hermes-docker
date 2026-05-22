@@ -1,0 +1,52 @@
+services:
+  hermes:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes
+    restart: unless-stopped
+    command: gateway run
+    ports:
+      - "8642:8642"   # gateway API
+      - "9119:9119"   # dashboard (enabled via HERMES_DASHBOARD=1)
+    volumes:
+      - ./hermes:/opt/data
+    environment:
+      - HERMES_DASHBOARD=1
+      - HERMES_UID=${HERMES_UID:-1000}
+      - HERMES_GID=${HERMES_GID:-1000}
+      - TERMINAL_ENV=ssh
+      - TERMINAL_SSH_HOST=terminal
+      - TERMINAL_SSH_USER=agent
+      - TERMINAL_SSH_PORT=22
+      - TERMINAL_SSH_KEY=/opt/data/ssh/terminal-key
+      # Uncomment to forward specific env vars instead of using .env file:
+      # - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      # - OPENAI_API_KEY=${OPENAI_API_KEY}
+      # - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+    networks:
+      - default
+      - internal
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: "2.0"
+
+  terminal:
+    build:
+      context: .
+      dockerfile: terminal.Dockerfile
+    container_name: hermes-terminal
+    restart: unless-stopped
+    volumes:
+      - ./hermes/ssh:/ssh
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "test", "-f", "/ssh/terminal-key"]
+      interval: 5s
+      retries: 3
+      start_period: 5s
+
+networks:
+  internal:
+    internal: true
