@@ -1,10 +1,10 @@
-# Hermes Agent — Docker Compose
+# Easy Hermes Docker
 
 Self-contained [Hermes Agent](https://github.com/nousresearch/hermes) with preconfigured ssh terminal for safe Linux environment.
 
 ## Why
 
-When i tried hermes with docker, i found many permision issues related to users and ownership. I had to constantly delete files as root, restart services, etc. This is my attempt to simplify and automate the process by isolating everything into containers.
+When i tried hermes with docker, i found many permision issues related to users and ownership. I had to constantly delete files as root, restart services, etc, and the agent could not interact with the local terminal. This is my attempt to simplify and automate the process by isolating everything into containers.
 
 ## Quick start
 
