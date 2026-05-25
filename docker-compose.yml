@@ -7,8 +7,10 @@ services:
     ports:
       - "8642:8642"   # gateway API
       - "9119:9119"   # dashboard (enabled via HERMES_DASHBOARD=1)
+    entrypoint: ["/opt/hermes/hermes-entrypoint.sh"]
     volumes:
       - ./hermes:/opt/data
+      - ./hermes-entrypoint.sh:/opt/hermes/hermes-entrypoint.sh:ro
     environment:
       - HERMES_DASHBOARD=1
       - HERMES_UID=${HERMES_UID:-1000}

@@ -34,6 +34,7 @@ hermes/.cache/
 hermes/.local/share/tirith/log.jsonl
 hermes/.local/share/tirith/tirith-threatdb.dat
 hermes/.local/state/tirith/threatdb-manifest-3fbe0bbb5a4129e5-body
+hermes/.local/state/hermes/gateway-locks
 hermes/.local/state/tirith/threatdb-manifest-3fbe0bbb5a4129e5-etag
 hermes/.local/state/tirith/threatdb-next-check-at
 hermes/.local/state/tirith/threatdb-spawned-at
@@ -41,3 +42,5 @@ hermes/.ssh/known_hosts
 hermes/.local/state/tirith/sessions/fallback-unknown-351f81cc.id
 hermes/.local/state/tirith/threatdb-update.lock
 hermes/.clean_shutdown
+hermes/.npm
+hermes/whatsapp

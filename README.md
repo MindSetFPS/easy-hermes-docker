@@ -27,6 +27,18 @@ the agent connects automatically.
 docker exec -it -u hermes hermes bash --init-file .venv/bin/activate
 ```
 
+### Network isolation
+
+The terminal container is on a dedicated `internal` network (`internal: true`) —
+no internet access and unreachable from other containers. Only `hermes` can connect
+to it over SSH. This prevents any lateral movement if another container on the host
+is compromised.
+
+```
+hermes  ──┬── default  (internet / API calls)
+          └── internal ─── terminal (isolated)
+```
+
 ## Project structure
 
 ```
@@ -65,6 +77,14 @@ The `hermes` container connects via `TERMINAL_SSH_KEY=/opt/data/ssh/terminal-key
 `config.yaml` at the project root is the source of truth. The compose file mounts
 `./hermes:/opt/data`, so `config.yaml` lives directly inside the data directory —
 no need for separate file mounts.
+
+### WhatsApp bridge
+
+The image ships a WhatsApp bridge that runs `npm install` at startup into
+`/opt/hermes/scripts/whatsapp-bridge/`. That directory is owned by the image's
+default uid (10000), so npm fails with EACCES after the user is remapped.
+`hermes-entrypoint.sh` runs before the main entrypoint and chowns the directory
+to the target UID/GID from `HERMES_UID` / `HERMES_GID`.
 
 ## Environment variables
 
