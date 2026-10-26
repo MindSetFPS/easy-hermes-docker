@@ -1,6 +1,6 @@
 FROM nikolaik/python-nodejs:python3.11-nodejs20
 
-RUN apt-get update && apt-get install -y openssh-server \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y openssh-server tzdata \
     && useradd -m -s /bin/bash agent \
     && echo 'agent:agent' | chpasswd \
     && mkdir -p /var/run/sshd /home/agent/.ssh /opt/data \

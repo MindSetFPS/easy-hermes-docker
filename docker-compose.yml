@@ -39,6 +39,10 @@ services:
       dockerfile: terminal.Dockerfile
     container_name: hermes-terminal
     restart: unless-stopped
+    environment:
+      - HERMES_UID=${HERMES_UID:-1000}
+      - HERMES_GID=${HERMES_GID:-1000}
+      - TZ=${TZ:-Asia/Gaza} # Put your timezone here or in a .env file
     volumes:
       - ./hermes/ssh:/ssh
     networks:

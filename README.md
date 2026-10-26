@@ -72,6 +72,10 @@ key into the `agent` user's `authorized_keys`, and starts `sshd`.
 
 The `hermes` container connects via `TERMINAL_SSH_KEY=/opt/data/ssh/terminal-key`.
 
+To change the terminal container's timezone, set `TZ` (e.g. `TZ=America/Bogota`) in
+your `.env` file. It is applied system-wide at startup, so SSH sessions and
+`date` inside the container agree.
+
 ### Config
 
 `config.yaml` at the project root is the source of truth. The compose file mounts
@@ -94,6 +98,7 @@ Set these in a `.env` file alongside `docker-compose.yml`:
 |---|---|---|
 | `HERMES_UID` | `1000` | Host UID — entrypoint remaps the internal `hermes` user to this |
 | `HERMES_GID` | `1000` | Host GID |
+| `TZ` | `America/Bogota` | Timezone for the terminal (SSH) container, e.g. `America/Bogota` |
 | `ANTHROPIC_API_KEY` | — | Anthropic API key |
 | `OPENAI_API_KEY` | — | OpenAI API key |
 | `TELEGRAM_BOT_TOKEN` | — | Telegram bot token (optional) |
