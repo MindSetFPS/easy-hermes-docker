@@ -87,6 +87,10 @@ terminal:
   docker_run_as_host_user: false
   persistent_shell: true
   lifetime_seconds: 300
+  ssh_host: terminal
+  ssh_user: agent
+  ssh_port: 22
+  ssh_key: /opt/data/ssh/terminal-key
 web:
   backend: ''
   search_backend: ''

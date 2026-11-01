@@ -70,7 +70,22 @@ A sidecar container (`hermes-terminal`) runs an SSH server. On startup, its entr
 generates an ED25519 key pair into `hermes/ssh/` if one doesn't exist, copies the public
 key into the `agent` user's `authorized_keys`, and starts `sshd`.
 
-The `hermes` container connects via `TERMINAL_SSH_KEY=/opt/data/ssh/terminal-key`.
+The `hermes` container connects using the `terminal:` section of `hermes/config.yaml`:
+
+| Config key | Value |
+|---|---|
+| `terminal.backend` | `ssh` |
+| `terminal.ssh_host` | `terminal` |
+| `terminal.ssh_user` | `agent` |
+| `terminal.ssh_port` | `22` |
+| `terminal.ssh_key` | `/opt/data/ssh/terminal-key` |
+
+`docker-compose.yml` also passes the same settings as `TERMINAL_*` env vars. Keep the
+values in `config.yaml`: config keys take precedence, and cron/gateway turns build their
+terminal policy from `config.yaml` and `hermes/.env` rather than the process environment.
+Without the config (or `.env`) values, scheduled jobs fail with
+`SSH environment requires ssh_host and ssh_user to be configured` while interactive
+sessions keep working.
 
 To change the terminal container's timezone, set `TZ` (e.g. `TZ=America/Bogota`) in
 your `.env` file. It is applied system-wide at startup, so SSH sessions and
@@ -103,14 +118,22 @@ Set these in a `.env` file alongside `docker-compose.yml`:
 | `OPENAI_API_KEY` | — | OpenAI API key |
 | `TELEGRAM_BOT_TOKEN` | — | Telegram bot token (optional) |
 
-## Terminal env vars (set automatically)
+## Terminal env vars (fallback)
+
+`docker-compose.yml` sets these on the `hermes` service:
 
 | Variable | Value |
 |---|---|
+| `TERMINAL_ENV` | `ssh` |
 | `TERMINAL_SSH_HOST` | `terminal` |
 | `TERMINAL_SSH_USER` | `agent` |
 | `TERMINAL_SSH_PORT` | `22` |
 | `TERMINAL_SSH_KEY` | `/opt/data/ssh/terminal-key` |
+
+They cover unscoped processes such as an interactive `docker exec`. Scoped turns (cron
+jobs, gateway sessions, the dashboard) build the terminal policy from `hermes/config.yaml`
+and `hermes/.env` and ignore the process environment, so the `terminal.ssh_*` values above
+are the ones that apply there.
 
 ## Security
 
